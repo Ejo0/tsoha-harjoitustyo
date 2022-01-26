@@ -19,3 +19,9 @@ Admin:
     - Ylläpitäjä voi muokata myytäviä tuotteita
     - Ylläpitäjä voi merkitä tehtyjä tilauksia toimitetuksi
 - Kaikissa näkymissä uloskirjautuminen
+
+Lisäyksiä ensimmäisen palautteen perusteella:
+- Käyttäjät voivat poistaa tuotteita ostoskorista
+- Ylläpitäjä voi poistaa tuotteita verkkokaupasta
+- Käyttäjät voivat antaa arvosteluja tuotteille
+- Ylläpitäjät voivat luoda alennuskampanjoita (tuotteita varten tehdään muutama kategoria)
