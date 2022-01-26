@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<h1>Tervetuloa verkkokauppaan!</h1>
+{% if session.user_id %}
+<p>Olet kirjautunut nimellä {{ session.username }}</p>
+<a href="/logout">Kirjaudu ulos</a>
+{% else %}
+<a href="/login">kirjaudu sisään</a>
+{% endif %}

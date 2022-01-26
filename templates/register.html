@@ -1,0 +1,18 @@
+<form action="/register" method="POST">
+    Käyttäjätunnus:
+    <input type="text" name="username"><br>
+    Salasana: 
+    <input type="password" name="password1"><br>
+    Toista salasana:
+    <input type="password" name="password2"><br>
+    <input type="hidden" name="role" value="customer">
+    <input type="submit" value="Luo tunnus">
+</form>
+
+{% if error_message %}
+<p style="color: red;">Virhe: {{ error_message }}</p>
+{% endif %}
+<p>
+    Jos sinulla on jo käyttäjätunnus, <a href="/login">kirjaudu sisään</a>
+</p>
+<a href="/">Palaa etusivulle</a>

@@ -1,0 +1,13 @@
+<form action="/login", method="POST">
+    Käyttäjätunnus:<br>
+    <input type="text" name="username"><br>
+    Salasana:<br>
+    <input type="password" name="password"><br>
+    <input type="submit" value="Kirjaudu sisään">
+</form>
+
+{% if error_message %}
+<p style="color: red;">{{ error_message }}</p>
+{% endif %}
+
+<a href="/register">Luo käyttäjätunnus</a>
