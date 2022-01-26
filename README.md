@@ -2,6 +2,8 @@ Kurssin _Tietokantasovellus_ harjoitustyö
 
 ## Verkkokauppasovellus
 
+Sovelluksen tuotannossa olevaa versiota pääset testaamaan täältä https://verkkokauppasovellus.herokuapp.com/
+
 Sovellus on yksinkertainen simulaatio verkkokaupasta. Sovelluksessa on julkinen osio sekä admin-työkalu. Alla on listattu sovelluksen ominaisuuksia
 
 Sovellus:
