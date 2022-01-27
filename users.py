@@ -32,3 +32,9 @@ def logout():
     del session["user_id"]
     del session["username"]
     del session["user_role"]
+
+def get_role(role):
+    try:
+        return session["user_role"] == role
+    except:
+        return False

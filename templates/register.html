@@ -1,11 +1,15 @@
 <form action="/register" method="POST">
-    Käyttäjätunnus:
+    Käyttäjätunnus:<br>
     <input type="text" name="username"><br>
-    Salasana: 
+    Salasana:<br>
     <input type="password" name="password1"><br>
-    Toista salasana:
+    Toista salasana:<br>
     <input type="password" name="password2"><br>
-    <input type="hidden" name="role" value="customer">
+    <p>
+        Voit luoda myös ylläpitäjän roolin, jolla pääsee palvelun backoffice-ympäristöön.<br>
+        <input type="checkbox" name="create_admin">
+        <label for="create_admin">Tee roolista ylläpitäjä</label>
+    </p>
     <input type="submit" value="Luo tunnus">
 </form>
 

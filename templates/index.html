@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <h1>Tervetuloa verkkokauppaan!</h1>
-{% if session.user_id %}
+{% if session.user_role == "customer" %}
 <p>Olet kirjautunut nimellä {{ session.username }}</p>
 <a href="/logout">Kirjaudu ulos</a>
 {% else %}
