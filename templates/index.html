@@ -6,3 +6,11 @@
 {% else %}
 <a href="/login">kirjaudu sisään</a>
 {% endif %}
+
+<h3>Tuotteet</h3>
+
+<ul>
+    {% for product in products%}
+    <li>{{ product.name }} hinta: {{ product.price }}</li>
+    {% endfor %}
+</ul>

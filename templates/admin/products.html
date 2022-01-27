@@ -1,0 +1,27 @@
+<h3>Admin</h3>
+<a href="/admin">Palaa admin-etusivulle</a><br>
+<a href="/logout">Kirjaudu ulos</a>
+<h4>Luo uusi tuote</h4>
+
+<form action="/admin/products" method="POST">
+    Nimi:<br>
+    <input type="text" name="name"><br>
+    Hinta:<br>
+    <input type="number" name="price" step="0.01"><br>
+    Kuvaus:<br>
+    <textarea name="description" rows="3" cols="50"></textarea><br>
+    <input type="hidden" name="user_id" value="{{ session.user_id }}">
+    <input type="submit" value="Luo tuote">
+</form>
+
+{% if error_message %}
+<p style="color: red;">{{ error_message }}</p>
+{% endif %}
+
+<h3>Tuotteet</h3>
+
+<ul>
+    {% for product in products%}
+    <li>{{ product.name }} hinta: {{ product.price }} luotu: {{ product.created_at}} tekijä: {{ product.creator_id }}</li>
+    {% endfor %}
+</ul>

@@ -1,10 +1,12 @@
 from flask import redirect, render_template, request
 from app import app
 import users
+import products
 
 @app.route('/')
 def index():
-    return render_template("index.html")
+    product_list = products.get_all_products()
+    return render_template("index.html", products = product_list)
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
@@ -51,3 +53,20 @@ def admin_index():
         return render_template("admin/index.html")
     else:
         return render_template("login.html", error_message = "Adminiin pääsy vain ylläpitäjän tunnuksilla!")
+
+@app.route('/admin/products', methods=["GET", "POST"])
+def admin_products():
+    if not users.get_role("admin"):
+        return render_template("login.html", error_message = "Adminiin pääsy vain ylläpitäjän tunnuksilla!")
+    product_list = products.get_all_products()
+    if request.method == "GET":
+        return render_template("admin/products.html", products = product_list)
+    elif request.method == "POST":
+        creator_id = int(request.form["user_id"])
+        name = request.form["name"]
+        price = float(request.form["price"])
+        description = request.form["description"]
+        if products.add_product(creator_id, name, price, description):
+            return redirect("/admin/products")
+        else:
+            return render_template("/admin/products.html", products = product_list, error_message = "Tarkista syöte!")
