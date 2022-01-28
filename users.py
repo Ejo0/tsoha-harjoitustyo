@@ -41,3 +41,5 @@ def get_role(role):
         return session["user_role"] == role
     except:
         return False
+def get_user_id():
+    return session["user_id"]

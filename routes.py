@@ -61,6 +61,20 @@ def add_to_cart():
     cart.add_to_cart(user_id, product_id, quantity)
     return redirect("/product/" + product_id)
 
+@app.route('/user/<int:user_id>', methods=["GET", "POST"])
+def user(user_id):
+    if not users.get_role("customer") or users.get_user_id() != user_id:
+        return redirect("/")
+    items = cart.get_cart_items(user_id)
+    if request.method == "GET":
+        return render_template("user.html", items = items)
+
+@app.route('/delete', methods=["POST"])
+def delete():
+    cart.delete_cart_item(request.form["cart_item_id"])
+    return redirect("user/" + request.form["user_id"])
+
+
 @app.route('/admin')
 def admin_index():
     if users.get_role("admin"):

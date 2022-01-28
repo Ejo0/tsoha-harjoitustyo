@@ -28,3 +28,16 @@ def sum_of_cart_items(user_id):
                 AND c.user_id = :user_id) AS products
             """
     return db.session.execute(sql, {"user_id":user_id}).fetchone()[0]
+
+def get_cart_items(user_id):
+    sql = """SELECT c.id, p.name, p.price, c.quantity, (p.price * c.quantity) AS sum
+            FROM products p, cart_items c
+            WHERE p.id = c.product_id
+            AND c.user_id = :user_id"""
+    return db.session.execute(sql, {"user_id": user_id}).fetchall()
+
+def delete_cart_item(cart_item_id):
+    sql = "DELETE FROM cart_items WHERE id=:cart_item_id"
+    db.session.execute(sql, {"cart_item_id":cart_item_id})
+    db.session.commit()
+    session["cart_sum"] = sum_of_cart_items(session["user_id"])

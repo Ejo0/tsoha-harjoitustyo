@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h3>Ostoskori:</h3>
+{% for item in items %}
+<b>{{ item.name }}</b> hinta: {{ item.price }}
+määrä: {{ item.quantity }} summa: {{ item.sum }}
+<form action="/delete" method="POST">
+    <input type="hidden" name="cart_item_id" value="{{ item.id }}">
+    <input type="hidden" name="user_id" value="{{ session.user_id }}">
+    <input type="submit" value="Poista tuote korista" style="color: red">
+</form>
+{% endfor %}
+{% endblock %}
