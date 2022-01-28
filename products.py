@@ -1,7 +1,7 @@
 from db import db
 
 def get_all_products():
-    sql = "SELECT id, name, price, description, created_at FROM products"
+    sql = "SELECT * FROM products"
     return db.session.execute(sql).fetchall()
 
 def add_product(creator_id, name, price, description):
@@ -13,3 +13,7 @@ def add_product(creator_id, name, price, description):
         return True
     except:
         return False
+
+def get_product(product_id):
+    sql = "SELECT * FROM products WHERE id = :product_id;"
+    return db.session.execute(sql, {"product_id": product_id}).fetchone()

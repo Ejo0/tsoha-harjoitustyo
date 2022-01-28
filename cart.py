@@ -1,0 +1,30 @@
+from flask import session
+from db import db
+
+def add_to_cart(user_id, product_id, quantity):
+    sql = "SELECT id, quantity FROM cart_items WHERE user_id =:user_id AND product_id=:product_id"
+    cart_item = db.session.execute(sql, {"user_id":user_id, "product_id":product_id}).fetchone()
+    try:
+        if not cart_item:
+            sql = """INSERT INTO cart_items (user_id, product_id, quantity, created_at)
+                    VALUES (:user_id, :product_id, :quantity, NOW())"""
+            db.session.execute(sql, {"user_id":user_id, "product_id":product_id, "quantity":quantity})
+            db.session.commit()
+        else:
+            new_quantity = cart_item["quantity"] + int(quantity)
+            sql = "UPDATE cart_items SET quantity=:quantity WHERE id=:id"
+            db.session.execute(sql, {"quantity":new_quantity, "id":cart_item["id"]})
+            db.session.commit()
+        session["cart_sum"] = sum_of_cart_items(user_id)
+    except:
+        pass
+
+def sum_of_cart_items(user_id):
+    sql = """SELECT COALESCE(SUM(products.total), 0)
+            FROM(
+                SELECT p.price * c.quantity AS total
+                FROM products p, cart_items c
+                WHERE p.id = c.product_id
+                AND c.user_id = :user_id) AS products
+            """
+    return db.session.execute(sql, {"user_id":user_id}).fetchone()[0]

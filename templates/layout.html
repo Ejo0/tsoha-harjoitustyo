@@ -1,0 +1,12 @@
+<title>Verkkokauppasovellus</title>
+<h3><a href="/">Verkkokauppasovellus</a></h3>
+{% if session.user_role == "customer" %}
+{{ session.username }}<br>
+Ostoskori: {{ session.cart_sum}} euroa
+<a href="/logout">Kirjaudu ulos</a>
+{% else %}
+<a href="/login">Kirjaudu sisään</a><br>
+<a href="/register">Luo käyttäjätunnus</a>
+{% endif %}
+
+{% block content %}{% endblock %}

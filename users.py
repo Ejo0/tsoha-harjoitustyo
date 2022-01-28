@@ -1,10 +1,11 @@
 from flask import session
 from werkzeug.security import check_password_hash, generate_password_hash
 from db import db
+import cart
 
 
 def login(username, password):
-    sql = "SELECT id, password, role FROM users WHERE username=:username"
+    sql = "SELECT * FROM users WHERE username=:username"
     user = db.session.execute(sql, {"username":username}).fetchone()
     if not user:
         return False
@@ -13,6 +14,7 @@ def login(username, password):
             session["user_id"] = user.id
             session["username"] = username
             session["user_role"] = user.role
+            session["cart_sum"] = cart.sum_of_cart_items(user.id)
             return True
         else:
             return False
@@ -32,6 +34,7 @@ def logout():
     del session["user_id"]
     del session["username"]
     del session["user_role"]
+    del session["cart_sum"]
 
 def get_role(role):
     try:

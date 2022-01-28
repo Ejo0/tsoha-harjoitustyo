@@ -2,6 +2,7 @@ from flask import redirect, render_template, request
 from app import app
 import users
 import products
+import cart
 
 @app.route('/')
 def index():
@@ -46,6 +47,19 @@ def login():
 def logout():
     users.logout()
     return redirect("/")
+
+@app.route('/product/<int:product_id>')
+def show_product(product_id):
+    product = products.get_product(product_id)
+    return render_template("product.html", product = product)
+
+@app.route('/add_to_cart', methods=["POST"])
+def add_to_cart():
+    user_id = request.form["user_id"]
+    product_id = request.form["product_id"]
+    quantity = request.form["quantity"]
+    cart.add_to_cart(user_id, product_id, quantity)
+    return redirect("/product/" + product_id)
 
 @app.route('/admin')
 def admin_index():
