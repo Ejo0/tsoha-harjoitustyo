@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h3>Tilauksen yhteenveto</h3>
+<p>Summa yhteensä: {{ session.cart_sum }}</p>
+{% for item in items %}
+<b>{{ item.name }}</b> hinta: {{ item.price }}
+määrä: {{ item.quantity }} summa: {{ item.sum }}<br>
+{% endfor %}
+
+<h3>Vahvista tilaus klikkaamalla maksutapaa</h3>
+<form action="" method="POST" style="font-size:larger;">
+    <input type="submit" value="PANKKI A">
+    <input type="submit" value="PANKKI B">
+    <input type="submit" value="KORTTI C">
+    <input type="hidden" name="items" value="{{ items }}">
+
+</form>
+
+{% endblock %}

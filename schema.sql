@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS cart_items (
 CREATE TABLE IF NOT EXISTS order_details (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users,
+    handler_id INTEGER REFERENCES users,
     total_sum NUMERIC(10,2),
     order_state TEXT,
     created_at TIMESTAMP
@@ -34,6 +35,7 @@ CREATE TABLE IF NOT EXISTS order_items (
     id SERIAL PRIMARY KEY,
     order_id INTEGER REFERENCES order_details,
     product_id INTEGER REFERENCES products,
-    count INTEGER,
-    unit_price NUMERIC(10,2)
+    quantity INTEGER,
+    unit_price NUMERIC(10,2),
+    created_at TIMESTAMP
 );

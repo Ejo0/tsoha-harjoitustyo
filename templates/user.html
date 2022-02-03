@@ -1,9 +1,23 @@
 {% extends "layout.html" %}
 {% block content %}
 
+<h3>Tilaukset:</h3>
+{% for order in order_list %}
+{{ order.created_at }}, summa: {{ order.total_sum }} euroa, tila:
+{% if order.order_state == 'created' %}
+Odottaa toimitusta
+{% elif order.order_state == 'processed' %}
+Toimitettu
+{% endif %}
+<br>
+{% endfor %}
+
 <h3>Ostoskori:</h3>
+{% if items %}
+<p><a href="{{ session.user_id }}/checkout">Vahvista tilaus</a></p>
+{% endif %}
 {% for item in items %}
-<b>{{ item.name }}</b> hinta: {{ item.price }}
+<b><a href="/product/{{ item.product_id }}">{{ item.name }}</a></b> hinta: {{ item.price }}
 määrä: {{ item.quantity }} summa: {{ item.sum }}
 <form action="/delete" method="POST">
     <input type="hidden" name="cart_item_id" value="{{ item.id }}">

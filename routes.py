@@ -3,6 +3,7 @@ from app import app
 import users
 import products
 import cart
+import orders
 
 @app.route('/')
 def index():
@@ -61,19 +62,31 @@ def add_to_cart():
     cart.add_to_cart(user_id, product_id, quantity)
     return redirect("/product/" + product_id)
 
-@app.route('/user/<int:user_id>', methods=["GET", "POST"])
+@app.route('/user/<int:user_id>')
 def user(user_id):
+    if not users.get_role("customer") or users.get_user_id() != user_id:
+        return redirect("/")
+    else:
+        items = cart.get_cart_items(user_id)
+        order_list = orders.get_orders(user_id)
+        return render_template("user.html", items = items, order_list = order_list)
+
+@app.route('/user/<int:user_id>/checkout', methods=["GET", "POST"])
+def checkout(user_id):
     if not users.get_role("customer") or users.get_user_id() != user_id:
         return redirect("/")
     items = cart.get_cart_items(user_id)
     if request.method == "GET":
-        return render_template("user.html", items = items)
+        return render_template("checkout.html", items = items)
+    if request.method == "POST":
+        if items and str(items) == request.form["items"]:
+            orders.create_order(items, user_id)
+        return redirect(f"/user/{user_id}")
 
 @app.route('/delete', methods=["POST"])
 def delete():
     cart.delete_cart_item(request.form["cart_item_id"])
     return redirect("user/" + request.form["user_id"])
-
 
 @app.route('/admin')
 def admin_index():
