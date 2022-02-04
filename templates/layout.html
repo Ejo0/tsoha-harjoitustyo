@@ -3,6 +3,12 @@
 {% if session.user_role == "customer" %}
 {{ session.username }} <a href="/logout"> Kirjaudu ulos</a><br>
 <a href="/user/{{ session.user_id }}">Ostoskori:</a> {{ session.cart_sum}} euroa
+
+{% elif session.user_role == "admin" %}
+Olet kirjautunut admin-tunnuksella: {{ session.username }}<br>
+<a href="/admin">Siirry adminiin</a><br>
+<a href="/logout"> Kirjaudu ulos</a><br>
+
 {% else %}
 <a href="/login">Kirjaudu sisään</a><br>
 <a href="/register">Luo käyttäjätunnus</a>

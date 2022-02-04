@@ -1,6 +1,9 @@
-<h3>Admin</h3>
+{% extends "admin/layout.html" %}
+{% block content %}
 
-Nimi: {{ session.username }} <br>
+<h3>Valikko</h3>
 
-<a href="/logout">Kirjaudu ulos</a><br>
-<a href="/admin/products">Tuotteet</a>
+<a href="/admin/products">Tuotteet</a><br>
+<a href="/admin/orders">Tilaukset</a>
+
+{% endblock %}

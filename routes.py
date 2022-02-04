@@ -111,3 +111,15 @@ def admin_products():
             return redirect("/admin/products")
         else:
             return render_template("/admin/products.html", products = product_list, error_message = "Tarkista syöte!")
+
+@app.route('/admin/orders', methods=["GET", "POST"])
+def admin_orders():
+    if not users.get_role("admin"):
+        return render_template("login.html", error_message = "Adminiin pääsy vain ylläpitäjän tunnuksilla!")
+    orders_list = orders.get_orders()
+    if request.method == "GET":
+        return render_template("admin/orders.html", order_list = orders_list)
+    if request.method == "POST":
+        order_id = request.form["order_id"]
+        orders.process_order(order_id)
+        return redirect("/admin/orders")

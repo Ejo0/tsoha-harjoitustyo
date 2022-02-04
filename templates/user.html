@@ -17,9 +17,10 @@ Toimitettu
 <p><a href="{{ session.user_id }}/checkout">Vahvista tilaus</a></p>
 {% endif %}
 {% for item in items %}
-<b><a href="/product/{{ item.product_id }}">{{ item.name }}</a></b> hinta: {{ item.price }}
-määrä: {{ item.quantity }} summa: {{ item.sum }}
+
 <form action="/delete" method="POST">
+    <b><a href="/product/{{ item.product_id }}">{{ item.name }}</a></b> hinta: {{ item.price }}
+    määrä: {{ item.quantity }} summa: {{ item.sum }}
     <input type="hidden" name="cart_item_id" value="{{ item.id }}">
     <input type="hidden" name="user_id" value="{{ session.user_id }}">
     <input type="submit" value="Poista tuote korista" style="color: red">

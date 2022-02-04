@@ -1,7 +1,7 @@
-<h3>Admin</h3>
-<a href="/admin">Palaa admin-etusivulle</a><br>
-<a href="/logout">Kirjaudu ulos</a>
-<h4>Luo uusi tuote</h4>
+{% extends "admin/layout.html" %}
+{% block content %}
+
+<h3>Luo uusi tuote</h3>
 
 <form action="/admin/products" method="POST">
     Nimi:<br>
@@ -25,3 +25,5 @@
     <li>{{ product.name }} hinta: {{ product.price }} luotu: {{ product.created_at}} tekijä: {{ product.creator_id }}</li>
     {% endfor %}
 </ul>
+
+{% endblock %}

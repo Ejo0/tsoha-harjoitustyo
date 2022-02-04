@@ -2,9 +2,22 @@ from flask import session
 from db import db
 import cart
 
-def get_orders(user_id):
-    sql = "SELECT * FROM order_details WHERE user_id=:user_id"
-    return db.session.execute(sql, {"user_id":user_id}).fetchall()
+def get_orders(user_id = None):
+    if not user_id:
+        sql = "SELECT * FROM order_details"
+        return db.session.execute(sql).fetchall()
+    else:
+        sql = "SELECT * FROM order_details WHERE user_id=:user_id"
+        return db.session.execute(sql, {"user_id":user_id}).fetchall()
+
+def process_order(order_id):
+    handler_id = session["user_id"]
+    sql ="""UPDATE order_details
+            SET order_state='processed', handler_id=:handler_id
+            WHERE id=:order_id AND order_state='created'
+        """
+    db.session.execute(sql, {"handler_id":handler_id, "order_id":order_id})
+    db.session.commit()
 
 def create_order(items, user_id):
     try:

@@ -1,0 +1,21 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+
+<h3>Avoimet tilaukset</h3>
+{% for order in order_list %}
+{% if order.order_state == 'created' %}
+<form action="/admin/orders" method="POST">
+    {{ order.created_at }} summa yhteensä: {{ order.total_sum }} tila: käsittelyssä
+    <input type="hidden" name="order_id" value="{{ order.id }}">
+    <input type="submit" value="Käsittele">
+</form>
+{% endif %}
+{% endfor %}
+<h3>Toimitetut tilaukset</h3>
+{% for order in order_list %}
+{% if order.order_state == 'processed' %}
+{{ order.created_at }} summa yhteensä: {{ order.total_sum }} tila: toimitettu, käsittelijä: {{ order.handler_id }}<br>
+{% endif %}
+{% endfor %}
+
+{% endblock %}
