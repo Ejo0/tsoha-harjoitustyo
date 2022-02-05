@@ -20,6 +20,7 @@ def add_to_cart(user_id, product_id, quantity):
         pass
 
 def sum_of_cart_items(user_id):
+    remove_deactivated_from_carts()
     sql = """SELECT COALESCE(SUM(products.total), 0)
             FROM(
                 SELECT p.price * c.quantity AS total
@@ -47,3 +48,10 @@ def clear_cart(user_id):
     db.session.execute(sql, {"user_id":user_id})
     db.session.commit()
     session["cart_sum"] = 0.0
+
+def remove_deactivated_from_carts():
+    sql ="""DELETE FROM cart_items c USING products p
+            WHERE p.id = c.product_id
+            AND p.active=false"""
+    db.session.execute(sql)
+    db.session.commit()

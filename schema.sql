@@ -11,7 +11,9 @@ CREATE TABLE IF NOT EXISTS products (
     name TEXT UNIQUE,
     price NUMERIC(10,2),
     description TEXT,
-    created_at TIMESTAMP
+    active BOOLEAN,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS cart_items (
@@ -28,7 +30,8 @@ CREATE TABLE IF NOT EXISTS order_details (
     handler_id INTEGER REFERENCES users,
     total_sum NUMERIC(10,2),
     order_state TEXT,
-    created_at TIMESTAMP
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS order_items (

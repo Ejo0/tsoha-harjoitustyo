@@ -7,7 +7,7 @@ import orders
 
 @app.route('/')
 def index():
-    product_list = products.get_all_products()
+    product_list = products.get_active_products()
     return render_template("index.html", products = product_list)
 
 @app.route('/register', methods=["GET", "POST"])
@@ -52,12 +52,16 @@ def logout():
 @app.route('/product/<int:product_id>')
 def show_product(product_id):
     product = products.get_product(product_id)
+    if not product.active:
+        return redirect('/')
     return render_template("product.html", product = product)
 
 @app.route('/add_to_cart', methods=["POST"])
 def add_to_cart():
-    user_id = request.form["user_id"]
     product_id = request.form["product_id"]
+    if not products.is_active(product_id):
+        return redirect('/')
+    user_id = request.form["user_id"]
     quantity = request.form["quantity"]
     cart.add_to_cart(user_id, product_id, quantity)
     return redirect("/product/" + product_id)
@@ -123,3 +127,23 @@ def admin_orders():
         order_id = request.form["order_id"]
         orders.process_order(order_id)
         return redirect("/admin/orders")
+
+@app.route('/admin/products/<int:id>', methods=["GET", "POST"])
+def admin_edit_product(id):
+    if not users.get_role("admin"):
+        return render_template("login.html", error_message = "Adminiin pääsy vain ylläpitäjän tunnuksilla!")
+    product = products.get_product(id)
+    if request.method == "GET":
+        return render_template("admin/edit_product.html", product = product)
+    if request.method == "POST":
+        new_name = request.form["name"]
+        new_price = request.form["price"]
+        new_description = request.form["description"]
+        is_active = "active" in request.form
+        if not new_name: new_name = product.name
+        if not new_price: new_price = product.price
+        if not new_description: new_description = product.description
+        if products.edit_product(product.id, new_name, new_price, new_description, is_active):
+            return redirect(f'/admin/products/{id}')
+        else:
+            return render_template('admin/edit_product.html', product = product, error_message = "Tarkista syöte!")

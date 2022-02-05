@@ -20,6 +20,7 @@ def process_order(order_id):
     db.session.commit()
 
 def create_order(items, user_id):
+    cart.remove_deactivated_from_carts()
     try:
         order_id = _initialize_new_order_detail(user_id)
         _initialize_new_order_items(items, order_id)

@@ -1,0 +1,31 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+
+<h3>{{ product.name }}</h3>
+
+Hinta: {{ product.price }}<br>
+Kuvaus: {{ product.description }}<br>
+Lisääjä: {{ product.creator_id }}<br>
+Luotu: {{ product.created_at }}<br>
+Viimeksi muokattu: {{ product.updated_at }}<br>
+Valikoimassa: {{ product.active }}<br>
+
+<p>Muokkaa tuotteen tietoja alla olevalla lomakkeella. Tyhjäksi jätettyjä kohtia ei muokata.</p>
+
+<form action="/admin/products/{{ product.id }}" method="POST">
+    Uusi nimi:<br>
+    <input type="text" name="name"><br>
+    Uusi hinta:<br>
+    <input type="number" name="price" step="0.01"><br>
+    Uusi kuvaus:<br>
+    <textarea name="description" rows="3" cols="50"></textarea><br>
+    <label for="active">Näytä tuote valikoimassa</label>
+    <input type="checkbox" name="active" checked>
+    <input type="submit" value="Päivitä tuote">
+</form>
+
+{% if error_message %}
+<p style="color: red;">{{ error_message }}</p>
+{% endif %}
+
+{% endblock %}

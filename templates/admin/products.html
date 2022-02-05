@@ -22,7 +22,10 @@
 
 <ul>
     {% for product in products%}
-    <li>{{ product.name }} hinta: {{ product.price }} luotu: {{ product.created_at}} tekijä: {{ product.creator_id }}</li>
+    <li>{{ product.name }}, {{ product.price }} euroa, valikoimassa: {{ product.active }},
+        luotu: {{ product.created_at}}, tekijä: {{ product.creator_id }}, muokattu viimeksi: {{ product.updated_at }}
+        <a href="/admin/products/{{ product.id }}">Muokkaa</a>
+    </li>
     {% endfor %}
 </ul>
 
