@@ -18,11 +18,11 @@ Toimitettu
 {% endif %}
 {% for item in items %}
 
-<form action="/delete" method="POST">
+<form action="/delete_cart_item" method="POST">
     <b><a href="/product/{{ item.product_id }}">{{ item.name }}</a></b> hinta: {{ item.price }}
     määrä: {{ item.quantity }} summa: {{ item.sum }}
     <input type="hidden" name="cart_item_id" value="{{ item.id }}">
-    <input type="hidden" name="user_id" value="{{ session.user_id }}">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <input type="submit" value="Poista tuote korista" style="color: red">
 </form>
 {% endfor %}

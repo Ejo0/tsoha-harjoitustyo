@@ -7,6 +7,7 @@
 <form action="/admin/orders" method="POST">
     {{ order.created_at }} summa yhteensä: {{ order.total_sum }} tila: käsittelyssä
     <input type="hidden" name="order_id" value="{{ order.id }}">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <input type="submit" value="Käsittele">
 </form>
 {% endif %}

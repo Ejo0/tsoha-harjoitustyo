@@ -11,8 +11,8 @@
 {% if session.user_role == 'customer' %}
 <form action="/add_to_cart" method="POST">
     Määrä: <input type="number" name="quantity" min="1" value="1" style="width: 3em">
-    <input type="hidden" name="user_id" value="{{ session.user_id }}">
     <input type="hidden" name="product_id" value="{{ product.id }}">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <input type="submit" value="Lisää ostoskoriin">
 </form>
 

@@ -1,4 +1,5 @@
-from flask import session
+import os
+from flask import session, request, abort
 from werkzeug.security import check_password_hash, generate_password_hash
 from db import db
 import cart
@@ -9,15 +10,15 @@ def login(username, password):
     user = db.session.execute(sql, {"username":username}).fetchone()
     if not user:
         return False
+    if check_password_hash(user.password, password):
+        session["user_id"] = user.id
+        session["username"] = username
+        session["user_role"] = user.role
+        session["cart_sum"] = cart.sum_of_cart_items(user.id)
+        session["csrf_token"] = os.urandom(16).hex()
+        return True
     else:
-        if check_password_hash(user.password, password):
-            session["user_id"] = user.id
-            session["username"] = username
-            session["user_role"] = user.role
-            session["cart_sum"] = cart.sum_of_cart_items(user.id)
-            return True
-        else:
-            return False
+        return False
 
 def register(username, password, role):
     hash_value = generate_password_hash(password)
@@ -31,16 +32,25 @@ def register(username, password, role):
     return login(username, password)
 
 def logout():
-    del session["user_id"]
-    del session["username"]
-    del session["user_role"]
-    del session["cart_sum"]
+    session.clear()
 
-def get_role(role):
+def get_role():
     try:
-        return session["user_role"] == role
+        return session["user_role"]
     except:
-        return False
+        return None
 
 def get_user_id():
     return session["user_id"]
+
+def require_role(role):
+    if session.get("user_role", None) != role:
+        abort(403)
+
+def confirm_id(id):
+    if session.get("user_id", 0) != id:
+        abort(403)
+
+def check_csrf():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)

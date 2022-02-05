@@ -14,6 +14,7 @@ määrä: {{ item.quantity }} summa: {{ item.sum }}<br>
     <input type="submit" value="PANKKI B">
     <input type="submit" value="KORTTI C">
     <input type="hidden" name="items" value="{{ items }}">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 
 </form>
 
