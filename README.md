@@ -9,6 +9,10 @@ Sovelluksen tuotannossa olevaa versiota pääset testaamaan täältä https://ve
 
 Sovelluksessa voi luoda käyttäjäprofiilin, josta voi tehdä halutessaan ylläpitäjän, jolloin kirjautuminen ohjataan palvelun admin-osioon https://verkkokauppasovellus.herokuapp.com/admin
 
+### Dokumentaatio
+
+Tietokantaa kuvattu päällisin puolin [arkkitehtuurikuvauksessa](/documentation/architecture.md).
+
 ### Välipalautus 2
 
 Sovelluksen perustoiminnallisuudet on pitkälti tuotannossa. Alla listattuna sovelluksen ominaisuuksia:
