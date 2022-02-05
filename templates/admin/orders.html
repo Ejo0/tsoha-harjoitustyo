@@ -5,7 +5,7 @@
 {% for order in order_list %}
 {% if order.order_state == 'created' %}
 <form action="/admin/orders" method="POST">
-    {{ order.created_at }} summa yhteensä: {{ order.total_sum }} tila: käsittelyssä
+    {{ order.created_at.strftime("%d.%m.%Y %H:%M:%S") }} summa yhteensä: {{ order.total_sum }} tila: käsittelyssä
     <input type="hidden" name="order_id" value="{{ order.id }}">
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <input type="submit" value="Käsittele">
@@ -15,7 +15,7 @@
 <h3>Toimitetut tilaukset</h3>
 {% for order in order_list %}
 {% if order.order_state == 'processed' %}
-{{ order.created_at }} summa yhteensä: {{ order.total_sum }} tila: toimitettu, käsittelijä: {{ order.handler_id }}<br>
+{{ order.created_at.strftime("%d.%m.%Y %H:%M:%S") }} summa yhteensä: {{ order.total_sum }} tila: toimitettu, käsittelijä: {{ order.handler_id }}<br>
 {% endif %}
 {% endfor %}
 

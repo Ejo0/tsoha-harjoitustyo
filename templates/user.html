@@ -3,7 +3,7 @@
 
 <h3>Tilaukset:</h3>
 {% for order in order_list %}
-{{ order.created_at }}, summa: {{ order.total_sum }} euroa, tila:
+{{ order.created_at.strftime("%d.%m.%Y klo %H:%M") }}, summa: {{ order.total_sum }} euroa, tila:
 {% if order.order_state == 'created' %}
 Odottaa toimitusta
 {% elif order.order_state == 'processed' %}

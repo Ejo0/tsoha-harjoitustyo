@@ -3,14 +3,15 @@
 
 <h3>{{ product.name }}</h3>
 
-Hinta: {{ product.price }}<br>
-Kuvaus: {{ product.description }}<br>
-Lisääjä: {{ product.creator_id }}<br>
-Luotu: {{ product.created_at }}<br>
-Viimeksi muokattu: {{ product.updated_at }}<br>
-Valikoimassa: {{ product.active }}<br>
+<b>Hinta:</b> {{ product.price }}<br>
+<b>Lisääjä</b> {{ product.creator_id }}<br>
+<b>Luotu:</b> {{ product.created_at.strftime("%d.%m.%Y %H:%M:%S") }}<br>
+<b>Viimeksi muokattu:</b> {{ product.updated_at.strftime("%d.%m.%Y %H:%M:%S") }}<br>
+<b>Valikoimassa:</b> {{ product.active }}<br>
+<b>Kuvaus:</b><br> {{ product.description }}
 
-<p>Muokkaa tuotteen tietoja alla olevalla lomakkeella. Tyhjäksi jätettyjä kohtia ei muokata.</p>
+<h3>Tuotteen päivitys</h3>
+<p>Tyhjäksi jätettyjä kohtia ei muuteta.</p>
 
 <form action="/admin/product/{{ product.id }}" method="POST">
     Uusi nimi:<br>
@@ -22,7 +23,7 @@ Valikoimassa: {{ product.active }}<br>
     <label for="active">Näytä tuote valikoimassa</label>
     <input type="checkbox" name="active" checked><br>
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-    <input type="submit" value="Päivitä tuote">
+    <input type="submit" value="Vahvista muutokset">
 </form>
 
 {% if error_message %}
