@@ -1,29 +1,46 @@
-Kurssin _Tietokantasovellus_ harjoitustyö
+Kurssin _Tietokantasovellus_ harjoitustyö  
+Päivitetty 5.2.2022
 
 ## Verkkokauppasovellus
 
-Sovelluksen tuotannossa olevaa versiota pääset testaamaan täältä https://verkkokauppasovellus.herokuapp.com/
+Sovellus on yksinkertainen simulaatio verkkokaupasta. Sovelluksessa on julkinen osio sekä admin-osio tuotteiden ja tilausten käsittelyä varten.
 
-Sovellus on yksinkertainen simulaatio verkkokaupasta. Sovelluksessa on julkinen osio sekä admin-työkalu. Alla on listattu sovelluksen ominaisuuksia
+Sovelluksen tuotannossa olevaa versiota pääset testaamaan täältä https://verkkokauppasovellus.herokuapp.com/  
+
+Sovelluksessa voi luoda käyttäjäprofiilin, josta voi tehdä halutessaan ylläpitäjän, jolloin kirjautuminen ohjataan palvelun admin-osioon https://verkkokauppasovellus.herokuapp.com/admin
+
+### Välipalautus 2
+
+Sovelluksen perustoiminnallisuudet on pitkälti tuotannossa. Alla listattuna sovelluksen ominaisuuksia:
 
 Sovellus:
 - Verkkokaupalla on julkinen etusivu, josta löytyy listaus myytävistä tuotteista. Lisäksi linkki sisäänkirjautumista tai käyttäjätunnuksen luomista varten.
 - Myytäviä tuotteita klikkaamalla avautuu erillinen näkymä, josta löytyy tuotteen tarkemmat tiedot
-- Jos käyttäjä on kirjautunut sisään, käyttäjä voi lisätä tuotteita ostoskoriin joko suoraan etusivulta tai tuotenäkymästä
-- Ostoskorin kautta tilauksen voi vahvistaa
-- Kirjautunut käyttäjä pääsee omat tiedot -osiosta selaamaan tehtyjä tilauksia
-- Kirjautunut käyttäjä pääsee jokaisesta näkymästä kirjautumaan ulos
-
+- Kirjautunut käyttäjä:
+    - Voi lisätä tuotteita ostoskoriin tuotenäkymästä
+    - Voi poistaa tuotteita ostoskorista
+    - Ostoskorin kautta pääsee tilauksen vahvistukseen
+    - Ostoskori-näkymässä näkee tehdyt tilaukset
+    - Kaikissa näkymissä uloskirjautuminen
+ 
 Admin:
-- Kirjautumisnäkymä, josta voi kirjautua sisään ylläpitäjä-roolin tunnuksella tai luomaan tunnuksen.
-- Kirjautuneelle ylläpitäjälle aloitusnäkymä, jossa on linkit toiminnallisuuksiin:
-    - Ylläpitäjä voi luoda uuden tuotteen verkkokauppaan myytäväksi
-    - Ylläpitäjä voi muokata myytäviä tuotteita
-    - Ylläpitäjä voi merkitä tehtyjä tilauksia toimitetuksi
+- Jos kirjautumisnäkymässä rooliksi valitsee ylläpitäjän, ohjataan käyttäjä admin-osioon
+- Ylläpitäjä voi luoda uuden tuotteen verkkokauppaan myytäväksi
+- Ylläpitäjä voi muokata myytäviä tuotteita
+- Tuotteita voi poistaa tai palauttaa takaisin valikoimaan (ns. soft delete)
+- Ylläpitäjä voi merkitä tehtyjä tilauksia toimitetuksi
 - Kaikissa näkymissä uloskirjautuminen
 
-Lisäyksiä ensimmäisen palautteen perusteella:
-- Käyttäjät voivat poistaa tuotteita ostoskorista
-- Ylläpitäjä voi poistaa tuotteita verkkokaupasta
-- Käyttäjät voivat antaa arvosteluja tuotteille
-- Ylläpitäjät voivat luoda alennuskampanjoita (tuotteita varten tehdään muutama kategoria)
+#### Jatkokehitys
+
+Palautteesta riippuen seuraavia asioita on vielä tarkoitus työstää:
+- Koodin huolto (pylint)
+- Laadunvarmistusta (esim. syötteiden validaatiot)
+- UI:n viimeistelyä (CSS)
+- Muita palautteessa annettuja huomioita
+- Dokumentaatio
+
+Mahdolliset lisäfeaturet:
+- Käyttäjät voivat antaa arvosteluja tuotteille (uusi tietokantataulu)
+- Alennuskampanjat (+ tuotekategoriat)
+- Tehtyjen tilausten sisällön selausta
