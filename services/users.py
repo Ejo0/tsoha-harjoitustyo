@@ -2,7 +2,7 @@ import os
 from flask import session, request, abort
 from werkzeug.security import check_password_hash, generate_password_hash
 from db import db
-import cart
+import services.cart as cart
 
 
 def login(username, password):

@@ -1,5 +1,5 @@
 from db import db
-import cart
+import services.cart as cart
 
 def get_all_products():
     sql = "SELECT * FROM products"

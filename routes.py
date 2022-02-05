@@ -1,9 +1,9 @@
 from flask import redirect, render_template, request
 from app import app
-import users
-import products
-import cart
-import orders
+import services.users as users
+import services.products as products
+import services.cart as cart
+import services.orders as orders
 
 @app.route('/')
 def index():

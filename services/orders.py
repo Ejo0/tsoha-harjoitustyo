@@ -1,6 +1,6 @@
 from flask import session
 from db import db
-import cart
+import services.cart as cart
 
 def get_orders(user_id = None):
     if not user_id:
