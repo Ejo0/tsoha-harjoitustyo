@@ -99,7 +99,7 @@ def delete_cart_item():
     users.check_csrf()
 
     cart.delete_cart_item(request.form["cart_item_id"])
-    return redirect("user/" + request.form["user_id"])
+    return redirect(f"/user/{users.get_user_id()}")
 
 @app.route('/admin', methods=["GET", "POST"])
 def admin_products():
