@@ -1,6 +1,13 @@
 <title>Admin</title>
-<h3><a href="/admin">Admin</a></h3>
-{{ session.username }}<br>
-<a href="/logout"> Kirjaudu ulos</a><br>
+<h3>Admin</h3>
+<p>
+    <a href="/admin">Tuotteet</a> |
+    <a href="/admin/orders">Tilaukset</a> |
+    <a href="/">Sovellus</a>
+    <span style="float: right;">
+        {{ session.username }} |
+        <a href="/logout"> Kirjaudu ulos</a>
+    </span>
+</p>
 
 {% block content %}{% endblock %}

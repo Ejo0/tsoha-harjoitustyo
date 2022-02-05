@@ -12,7 +12,7 @@ Valikoimassa: {{ product.active }}<br>
 
 <p>Muokkaa tuotteen tietoja alla olevalla lomakkeella. Tyhjäksi jätettyjä kohtia ei muokata.</p>
 
-<form action="/admin/products/{{ product.id }}" method="POST">
+<form action="/admin/product/{{ product.id }}" method="POST">
     Uusi nimi:<br>
     <input type="text" name="name"><br>
     Uusi hinta:<br>
@@ -20,7 +20,7 @@ Valikoimassa: {{ product.active }}<br>
     Uusi kuvaus:<br>
     <textarea name="description" rows="3" cols="50"></textarea><br>
     <label for="active">Näytä tuote valikoimassa</label>
-    <input type="checkbox" name="active" checked>
+    <input type="checkbox" name="active" checked><br>
     <input type="submit" value="Päivitä tuote">
 </form>
 

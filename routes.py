@@ -92,29 +92,22 @@ def delete():
     cart.delete_cart_item(request.form["cart_item_id"])
     return redirect("user/" + request.form["user_id"])
 
-@app.route('/admin')
-def admin_index():
-    if users.get_role("admin"):
-        return render_template("admin/index.html")
-    else:
-        return render_template("login.html", error_message = "Adminiin pääsy vain ylläpitäjän tunnuksilla!")
-
-@app.route('/admin/products', methods=["GET", "POST"])
+@app.route('/admin', methods=["GET", "POST"])
 def admin_products():
     if not users.get_role("admin"):
         return render_template("login.html", error_message = "Adminiin pääsy vain ylläpitäjän tunnuksilla!")
     product_list = products.get_all_products()
     if request.method == "GET":
-        return render_template("admin/products.html", products = product_list)
+        return render_template("admin/index.html", products = product_list)
     elif request.method == "POST":
         creator_id = int(request.form["user_id"])
         name = request.form["name"]
         price = float(request.form["price"])
         description = request.form["description"]
         if products.add_product(creator_id, name, price, description):
-            return redirect("/admin/products")
+            return redirect("/admin")
         else:
-            return render_template("/admin/products.html", products = product_list, error_message = "Tarkista syöte!")
+            return render_template("admin/index.html", products = product_list, error_message = "Tarkista syöte!")
 
 @app.route('/admin/orders', methods=["GET", "POST"])
 def admin_orders():
@@ -128,13 +121,13 @@ def admin_orders():
         orders.process_order(order_id)
         return redirect("/admin/orders")
 
-@app.route('/admin/products/<int:id>', methods=["GET", "POST"])
-def admin_edit_product(id):
+@app.route('/admin/product/<int:id>', methods=["GET", "POST"])
+def admin_product(id):
     if not users.get_role("admin"):
         return render_template("login.html", error_message = "Adminiin pääsy vain ylläpitäjän tunnuksilla!")
     product = products.get_product(id)
     if request.method == "GET":
-        return render_template("admin/edit_product.html", product = product)
+        return render_template("admin/product.html", product = product)
     if request.method == "POST":
         new_name = request.form["name"]
         new_price = request.form["price"]
@@ -144,6 +137,6 @@ def admin_edit_product(id):
         if not new_price: new_price = product.price
         if not new_description: new_description = product.description
         if products.edit_product(product.id, new_name, new_price, new_description, is_active):
-            return redirect(f'/admin/products/{id}')
+            return redirect(f'/admin/product/{id}')
         else:
-            return render_template('admin/edit_product.html', product = product, error_message = "Tarkista syöte!")
+            return render_template('admin/product.html', product = product, error_message = "Tarkista syöte!")
