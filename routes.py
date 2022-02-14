@@ -20,8 +20,12 @@ def register():
         password1 = request.form["password1"]
         password2 = request.form["password2"]
         role = "admin" if request.form.get("create_admin") else "customer"
+        if len(username) not in range(1,21):
+            return render_template("register.html", error_message="Käyttäjätunnuksen tulee olla 1-20 merkkiä pitkä")
         if password1 != password2:
-            return render_template("register.html", error_message = "Tarkista salasana")
+            return render_template("register.html", error_message="Salasanat eivät täsmää")
+        if len(password1) not in range(5,51):
+            return render_template("register.html", error_message="Salasanan tulee olla 5-50 merkkiä pitkä")
         else:
             if users.register(username, password1, role):
                 if role == "customer":
@@ -107,6 +111,9 @@ def admin_products():
         return render_template("login.html", error_message = "Adminiin pääsy vain ylläpitäjän tunnuksilla!")
 
     product_list = products.get_all_products()
+    def render_with_error(error_message):
+            return render_template("admin/index.html", products=product_list, error_message=error_message)
+
     if request.method == "GET":
         return render_template("admin/index.html", products = product_list)
 
@@ -114,12 +121,24 @@ def admin_products():
         users.check_csrf()
 
         name = request.form["name"]
-        price = float(request.form["price"])
+        if len(name) not in range(1, 31):
+            return render_with_error("Nimen tulee olla 1-30 merkkiä pitkä")
+
+        try:
+            price = float(request.form["price"])
+        except:
+            return render_with_error("Hinnan tulee olla kokonais- tai desimaaliluku pisteellä eroteltuna")
+        if price <= 0 or price > 1_000_000:
+            return render_with_error("Hinnan tulee olla positiivinen ja korkeintaan miljoona euroa")
+ 
         description = request.form["description"]
+        if len(description) not in range(1, 500):
+            return render_with_error("Kuvauksen tulee olla 1-500 merkkiä pitkä")
+
         if products.add_product(users.get_user_id(), name, price, description):
             return redirect("/admin")
         else:
-            return render_template("admin/index.html", products = product_list, error_message = "Tarkista syöte!")
+            return render_with_error(f"Tuote '{name}' on jo verkkokaupassa")
 
 @app.route('/admin/orders', methods=["GET", "POST"])
 def admin_orders():
