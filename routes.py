@@ -66,9 +66,13 @@ def show_product(product_id):
 def add_to_cart():
     users.check_csrf()
 
-    quantity = request.form["quantity"]
     product_id = request.form["product_id"]
-    if not products.is_active(product_id):
+    try:
+        quantity = int(request.form["quantity"])
+    except:
+        return redirect("/product/" + product_id)
+
+    if not products.is_active(product_id) or quantity not in range(1, 51):
         return redirect('/')
 
     cart.add_to_cart(users.get_user_id(), product_id, quantity)
