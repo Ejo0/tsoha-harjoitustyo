@@ -4,6 +4,7 @@ import services.users as users
 import services.products as products
 import services.cart as cart
 import services.orders as orders
+import services.reviews as reviews
 
 @app.route('/')
 def index():
@@ -60,7 +61,8 @@ def show_product(product_id):
     product = products.get_product(product_id)
     if not product or not product.active:
         return redirect('/')
-    return render_template("product.html", product = product)
+    reviews_list = reviews.get_reviews(product_id)
+    return render_template("product.html", product=product, reviews_list=reviews_list)
 
 @app.route('/add_to_cart', methods=["POST"])
 def add_to_cart():
@@ -108,6 +110,20 @@ def delete_cart_item():
 
     cart.delete_cart_item(request.form["cart_item_id"])
     return redirect(f"/user/{users.get_user_id()}")
+
+@app.route('/add_review', methods=["POST"])
+def add_review():
+    users.check_csrf()
+
+    product_id = request.form["product_id"]
+    content = request.form["content"]
+    try:
+        grade = int(request.form["grade"])
+        if grade in [1,2,3,4,5] and len(content) in range(1,501) and products.is_active(product_id):
+            reviews.add_review(product_id, grade, content)
+    except:
+        pass
+    return redirect(f"/product/{product_id}")
 
 @app.route('/admin', methods=["GET", "POST"])
 def admin_products():

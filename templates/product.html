@@ -16,6 +16,25 @@
     <input type="submit" value="Lisää ostoskoriin">
 </form>
 
+<h3>Arvostele tuote</h3>
+<form action="/add_review" method="POST">
+    Montako tähteä?<br>
+    <input type="number" name="grade" min="1" max="5" required style="width: 3em;"><br>
+    Kirjoita arvostelu<br>
+    <textarea name="content" rows="3" cols="50" minlength="1" maxlength="500" required></textarea><br>
+    <input type="hidden" name="product_id" value="{{ product.id }}">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    <input type="submit" value="Lisää arvostelu">
+</form>
 {% endif %}
+
+<h3>Arvostelut</h3>
+{% for review in reviews_list %}
+<p>
+    <b>Arvosteltu: </b> {{ review.created_at.strftime("%d.%m.%Y klo %H:%M") }}<br>
+    <b>Arvosana: </b> {{ review.grade }} tähteä<br>
+    {{ review.content }}
+</p>
+{% endfor %}
 
 {% endblock %}

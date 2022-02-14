@@ -42,3 +42,12 @@ CREATE TABLE IF NOT EXISTS order_items (
     unit_price NUMERIC(10,2),
     created_at TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS reviews (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users,
+    product_id INTEGER REFERENCES products,
+    grade INTEGER,
+    content TEXT,
+    created_at TIMESTAMP
+)
