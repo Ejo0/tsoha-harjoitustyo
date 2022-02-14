@@ -1,3 +1,6 @@
+{% extends "layout.html" %}
+{% block content %}
+
 <form action="/login", method="POST">
     Käyttäjätunnus:<br>
     <input type="text" name="username"><br>
@@ -10,4 +13,4 @@
 <p style="color: red;">{{ error_message }}</p>
 {% endif %}
 
-<a href="/register">Luo käyttäjätunnus</a>
+{% endblock %}

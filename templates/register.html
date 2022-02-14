@@ -1,3 +1,6 @@
+{% extends "layout.html" %}
+{% block content %}
+
 <form action="/register" method="POST">
     Käyttäjätunnus:<br>
     <input type="text" name="username" minlength="1" maxlength="20" required><br>
@@ -16,7 +19,5 @@
 {% if error_message %}
 <p style="color: red;">Virhe: {{ error_message }}</p>
 {% endif %}
-<p>
-    Jos sinulla on jo käyttäjätunnus, <a href="/login">kirjaudu sisään</a>
-</p>
-<a href="/">Palaa etusivulle</a>
+
+{% endblock %}
