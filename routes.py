@@ -58,7 +58,7 @@ def logout():
 @app.route('/product/<int:product_id>')
 def show_product(product_id):
     product = products.get_product(product_id)
-    if not product.active:
+    if not product or not product.active:
         return redirect('/')
     return render_template("product.html", product = product)
 
@@ -162,6 +162,9 @@ def admin_product(id):
         return render_template("login.html", error_message = "Adminiin pääsy vain ylläpitäjän tunnuksilla!")
 
     product = products.get_product(id)
+    if not product:
+        return redirect('/admin')
+
     if request.method == "GET":
         return render_template("admin/product.html", product = product)
 
