@@ -1,4 +1,4 @@
-from flask import session
+from flask import session, abort
 from db import db
 
 def add_to_cart(user_id, product_id, quantity):
@@ -38,10 +38,14 @@ def get_cart_items(user_id):
     return db.session.execute(sql, {"user_id": user_id}).fetchall()
 
 def delete_cart_item(cart_item_id):
-    sql = "DELETE FROM cart_items WHERE id=:cart_item_id"
-    db.session.execute(sql, {"cart_item_id":cart_item_id})
-    db.session.commit()
-    session["cart_sum"] = sum_of_cart_items(session["user_id"])
+    sql = "DELETE FROM cart_items WHERE id=:cart_item_id RETURNING user_id"
+    user_id = db.session.execute(sql, {"cart_item_id":cart_item_id}).fetchone()
+
+    if not user_id or session.get("user_id", 0) != user_id[0]:
+        abort(403)
+    else:
+        db.session.commit()
+        session["cart_sum"] = sum_of_cart_items(session["user_id"])
 
 def clear_cart(user_id):
     sql = "DELETE FROM cart_items WHERE user_id=:user_id"
