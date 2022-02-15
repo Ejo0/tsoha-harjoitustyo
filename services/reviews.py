@@ -13,9 +13,9 @@ def add_review(product_id, grade, content):
         return False
 
 def get_reviews(product_id):
-    sql ="""SELECT id, user_id, product_id, grade, content, created_at
-            FROM reviews
-            WHERE product_id=:product_id"""
+    sql ="""SELECT r.id, r.user_id, r.product_id, r.grade, r.content, r.created_at, u.username
+            FROM reviews r, users u
+            WHERE r.product_id=:product_id AND r.user_id=u.id"""
     return db.session.execute(sql, {"product_id":product_id}).fetchall()
 
 def get_average_grade(product_id):

@@ -41,6 +41,7 @@ Ei vielä arvosteluita
 <p>
     <b>Arvosteltu: </b> {{ review.created_at.strftime("%d.%m.%Y klo %H:%M") }}<br>
     <b>Arvosana: </b> {{ review.grade }} tähteä<br>
+    <b>Arvostelija: </b> {{ review.username }}<br>
     {{ review.content }}
 </p>
 {% endfor %}
