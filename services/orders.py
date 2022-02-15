@@ -4,18 +4,21 @@ import services.cart as cart
 
 def get_orders(user_id = None):
     if not user_id:
-        sql = "SELECT * FROM order_details"
+        sql = """SELECT id, user_id, handler_id, total_sum, order_state,
+                 created_at, updated_at
+                 FROM order_details"""
         return db.session.execute(sql).fetchall()
-    else:
-        sql = "SELECT * FROM order_details WHERE user_id=:user_id"
-        return db.session.execute(sql, {"user_id":user_id}).fetchall()
+    sql = """SELECT id, user_id, handler_id, total_sum, order_state,
+             created_at, updated_at
+             FROM order_details
+             WHERE user_id=:user_id"""
+    return db.session.execute(sql, {"user_id":user_id}).fetchall()
 
 def process_order(order_id):
     handler_id = session["user_id"]
-    sql ="""UPDATE order_details
-            SET order_state='processed', handler_id=:handler_id
-            WHERE id=:order_id AND order_state='created'
-        """
+    sql = """UPDATE order_details
+             SET order_state='processed', handler_id=:handler_id
+             WHERE id=:order_id AND order_state='created'"""
     db.session.execute(sql, {"handler_id":handler_id, "order_id":order_id})
     db.session.commit()
 
@@ -31,17 +34,20 @@ def create_order(items, user_id):
         return False
 
 def _initialize_new_order_detail(user_id):
-    sum = session["cart_sum"]
-    sql ="""INSERT INTO order_details (user_id, total_sum, order_state, created_at)
-            VALUES (:user_id, :total_sum, :order_state, NOW())
-            RETURNING id"""
-    return db.session.execute(sql, {"user_id":user_id, "total_sum":sum, "order_state":"created"}).fetchone()[0]
+    cart_sum = session["cart_sum"]
+    sql = """INSERT INTO order_details (user_id, total_sum, order_state, created_at)
+             VALUES (:user_id, :total_sum, :order_state, NOW())
+             RETURNING id"""
+    return db.session.execute(sql, {"user_id":user_id, "total_sum":cart_sum,
+                              "order_state":"created"}).fetchone()[0]
 
 def _initialize_new_order_items(items, order_id):
     for item in items:
-            product_id = item["product_id"]
-            quantity = item["quantity"]
-            unit_price = item["price"]
-            sql ="""INSERT INTO order_items (order_id, product_id, quantity, unit_price, created_at)
-                    VALUES (:order_id, :product_id, :quantity, :unit_price, NOW())"""
-            db.session.execute(sql, {"order_id":order_id, "product_id":product_id, "quantity":quantity, "unit_price":unit_price })
+
+        product_id = item["product_id"]
+        quantity = item["quantity"]
+        unit_price = item["price"]
+        sql = """INSERT INTO order_items (order_id, product_id, quantity, unit_price, created_at)
+                 VALUES (:order_id, :product_id, :quantity, :unit_price, NOW())"""
+        db.session.execute(sql, {"order_id":order_id, "product_id":product_id,
+                           "quantity":quantity, "unit_price":unit_price })

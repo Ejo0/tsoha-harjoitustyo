@@ -2,11 +2,10 @@ import os
 from flask import session, request, abort
 from werkzeug.security import check_password_hash, generate_password_hash
 from db import db
-import services.cart as cart
-
+from services import cart
 
 def login(username, password):
-    sql = "SELECT * FROM users WHERE username=:username"
+    sql = "SELECT id, username, password, role FROM users WHERE username=:username"
     user = db.session.execute(sql, {"username":username}).fetchone()
     if not user:
         return False
@@ -17,14 +16,13 @@ def login(username, password):
         session["cart_sum"] = cart.sum_of_cart_items(user.id)
         session["csrf_token"] = os.urandom(16).hex()
         return True
-    else:
-        return False
+    return False
 
 def register(username, password, role):
     hash_value = generate_password_hash(password)
     try:
-        sql ="""INSERT INTO users (username, password, role)
-                VALUES (:username, :password, :role)"""
+        sql = """INSERT INTO users (username, password, role)
+                 VALUES (:username, :password, :role)"""
         db.session.execute(sql, {"username":username, "password":hash_value, "role":role})
         db.session.commit()
     except:

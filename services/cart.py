@@ -2,13 +2,14 @@ from flask import session, abort
 from db import db
 
 def add_to_cart(user_id, product_id, quantity):
-    sql = "SELECT id, quantity FROM cart_items WHERE user_id =:user_id AND product_id=:product_id"
+    sql = "SELECT id, quantity FROM cart_items WHERE user_id=:user_id AND product_id=:product_id"
     cart_item = db.session.execute(sql, {"user_id":user_id, "product_id":product_id}).fetchone()
     try:
         if not cart_item:
             sql = """INSERT INTO cart_items (user_id, product_id, quantity, created_at)
-                    VALUES (:user_id, :product_id, :quantity, NOW())"""
-            db.session.execute(sql, {"user_id":user_id, "product_id":product_id, "quantity":quantity})
+                     VALUES (:user_id, :product_id, :quantity, NOW())"""
+            db.session.execute(sql, {"user_id":user_id, "product_id":product_id,
+                               "quantity":quantity})
             db.session.commit()
         else:
             new_quantity = cart_item["quantity"] + int(quantity)
@@ -21,20 +22,17 @@ def add_to_cart(user_id, product_id, quantity):
 
 def sum_of_cart_items(user_id):
     remove_deactivated_from_carts()
-    sql = """SELECT COALESCE(SUM(products.total), 0)
-            FROM(
-                SELECT p.price * c.quantity AS total
-                FROM products p, cart_items c
-                WHERE p.id = c.product_id
-                AND c.user_id = :user_id) AS products
-            """
+    sql = """SELECT COALESCE(SUM(p.price * c.quantity), 0)
+             FROM products p, cart_items c
+             WHERE p.id=c.product_id AND c.user_id=:user_id"""
     return db.session.execute(sql, {"user_id":user_id}).fetchone()[0]
 
 def get_cart_items(user_id):
-    sql = """SELECT c.id, p.id as product_id, p.name, p.price, c.quantity, (p.price * c.quantity) AS sum
-            FROM products p, cart_items c
-            WHERE p.id = c.product_id
-            AND c.user_id = :user_id"""
+    sql = """SELECT c.id, p.id as product_id, p.name, p.price, c.quantity,
+             (p.price * c.quantity) AS sum
+             FROM products p, cart_items c
+             WHERE p.id=c.product_id
+             AND c.user_id=:user_id"""
     return db.session.execute(sql, {"user_id": user_id}).fetchall()
 
 def delete_cart_item(cart_item_id):
@@ -54,8 +52,8 @@ def clear_cart(user_id):
     session["cart_sum"] = 0.0
 
 def remove_deactivated_from_carts():
-    sql ="""DELETE FROM cart_items c USING products p
-            WHERE p.id = c.product_id
-            AND p.active=false"""
+    sql = """DELETE FROM cart_items c USING products p
+             WHERE p.id=c.product_id
+             AND p.active=false"""
     db.session.execute(sql)
     db.session.commit()

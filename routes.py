@@ -1,17 +1,13 @@
 from flask import redirect, render_template, request
 from app import app
-import services.users as users
-import services.products as products
-import services.cart as cart
-import services.orders as orders
-import services.reviews as reviews
+from services import users, products, cart, orders, reviews
 
-@app.route('/')
+@app.route("/")
 def index():
     product_list = products.get_active_products()
-    return render_template("index.html", products = product_list)
+    return render_template("index.html", products=product_list)
 
-@app.route('/register', methods=["GET", "POST"])
+@app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "GET":
         return render_template("register.html")
@@ -22,21 +18,22 @@ def register():
         password2 = request.form["password2"]
         role = "admin" if request.form.get("create_admin") else "customer"
         if len(username) not in range(1,21):
-            return render_template("register.html", error_message="Käyttäjätunnuksen tulee olla 1-20 merkkiä pitkä")
+            return render_template("register.html",
+                                   error_message="Käyttäjätunnuksen tulee olla 1-20 merkkiä pitkä")
         if password1 != password2:
             return render_template("register.html", error_message="Salasanat eivät täsmää")
         if len(password1) not in range(5,51):
-            return render_template("register.html", error_message="Salasanan tulee olla 5-50 merkkiä pitkä")
-        else:
-            if users.register(username, password1, role):
-                if role == "customer":
-                    return redirect("/")
-                if role == "admin":
-                    return redirect("/admin")
-            else:
-                return render_template("register.html", error_message = "Käyttäjätunnus ei kelpaa")
+            return render_template("register.html",
+                                   error_message="Salasanan tulee olla 5-50 merkkiä pitkä")
 
-@app.route('/login', methods=["GET", "POST"])
+        if users.register(username, password1, role):
+            if role == "customer":
+                return redirect("/")
+            if role == "admin":
+                return redirect("/admin")
+            return render_template("register.html", error_message="Tunnuksella löytyy jo käyttäjä")
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
         return render_template("login.html")
@@ -45,29 +42,29 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
         if not users.login(username, password):
-            return render_template("login.html", error_message = "Väärä tunnus tai salasana")
-        elif users.get_role() == "customer":
+            return render_template("login.html", error_message="Väärä tunnus tai salasana")
+        if users.get_role() == "customer":
             return redirect("/")
-        elif users.get_role() == "admin":
+        if users.get_role() == "admin":
             return redirect("/admin")
 
-@app.route('/logout')
+@app.route("/logout")
 def logout():
     users.logout()
     return redirect("/")
 
-@app.route('/product/<int:product_id>')
+@app.route("/product/<int:product_id>")
 def show_product(product_id):
     product = products.get_product(product_id)
     if not product or not product.active:
-        return redirect('/')
+        return redirect("/")
     reviews_list = reviews.get_reviews(product_id)
     avg_grade = reviews.get_average_grade(product_id)
     review_count = reviews.get_review_count(product_id)
-    return render_template("product.html", product=product,
-        reviews_list=reviews_list, avg_grade=avg_grade, review_count=review_count)
+    return render_template("product.html", product=product, reviews_list=reviews_list,
+                           avg_grade=avg_grade, review_count=review_count)
 
-@app.route('/add_to_cart', methods=["POST"])
+@app.route("/add_to_cart", methods=["POST"])
 def add_to_cart():
     users.check_csrf()
 
@@ -78,28 +75,28 @@ def add_to_cart():
         return redirect("/product/" + product_id)
 
     if not products.is_active(product_id) or quantity not in range(1, 51):
-        return redirect('/')
+        return redirect("/")
 
     cart.add_to_cart(users.get_user_id(), product_id, quantity)
     return redirect("/product/" + product_id)
 
-@app.route('/user/<int:user_id>')
+@app.route("/user/<int:user_id>")
 def user(user_id):
     users.require_role("customer")
     users.confirm_id(user_id)
-    
+
     items = cart.get_cart_items(user_id)
     order_list = orders.get_orders(user_id)
-    return render_template("user.html", items = items, order_list = order_list)
+    return render_template("user.html", items=items, order_list=order_list)
 
-@app.route('/user/<int:user_id>/checkout', methods=["GET", "POST"])
+@app.route("/user/<int:user_id>/checkout", methods=["GET", "POST"])
 def checkout(user_id):
     users.require_role("customer")
     users.confirm_id(user_id)
 
     items = cart.get_cart_items(user_id)
     if request.method == "GET":
-        return render_template("checkout.html", items = items)
+        return render_template("checkout.html", items=items)
     if request.method == "POST":
         users.check_csrf()
 
@@ -107,14 +104,14 @@ def checkout(user_id):
             orders.create_order(items, user_id)
         return redirect(f"/user/{user_id}")
 
-@app.route('/delete_cart_item', methods=["POST"])
+@app.route("/delete_cart_item", methods=["POST"])
 def delete_cart_item():
     users.check_csrf()
 
     cart.delete_cart_item(request.form["cart_item_id"])
     return redirect(f"/user/{users.get_user_id()}")
 
-@app.route('/add_review', methods=["POST"])
+@app.route("/add_review", methods=["POST"])
 def add_review():
     users.check_csrf()
 
@@ -128,19 +125,21 @@ def add_review():
         pass
     return redirect(f"/product/{product_id}")
 
-@app.route('/admin', methods=["GET", "POST"])
+@app.route("/admin", methods=["GET", "POST"])
 def admin_products():
     if not users.get_role() == "admin":
-        return render_template("login.html", error_message = "Adminiin pääsy vain ylläpitäjän tunnuksilla!")
+        return render_template("login.html",
+                               error_message="Adminiin pääsy vain ylläpitäjän tunnuksilla!")
 
     product_list = products.get_all_products()
     def render_with_error(error_message):
-            return render_template("admin/index.html", products=product_list, error_message=error_message)
+        return render_template("admin/index.html", products=product_list,
+                               error_message=error_message)
 
     if request.method == "GET":
-        return render_template("admin/index.html", products = product_list)
+        return render_template("admin/index.html", products=product_list)
 
-    elif request.method == "POST":
+    if request.method == "POST":
         users.check_csrf()
 
         name = request.form["name"]
@@ -150,10 +149,11 @@ def admin_products():
         try:
             price = float(request.form["price"])
         except:
-            return render_with_error("Hinnan tulee olla kokonais- tai desimaaliluku pisteellä eroteltuna")
+            return render_with_error("""Hinnan tulee olla kokonais- tai
+                                     desimaaliluku pisteellä eroteltuna""")
         if price <= 0 or price > 1_000_000:
-            return render_with_error("Hinnan tulee olla positiivinen ja korkeintaan miljoona euroa")
- 
+            return render_with_error("Hinnan tulee olla positiivinen ja korkeintaan miljoona")
+
         description = request.form["description"]
         if len(description) not in range(1, 500):
             return render_with_error("Kuvauksen tulee olla 1-500 merkkiä pitkä")
@@ -163,14 +163,15 @@ def admin_products():
         else:
             return render_with_error(f"Tuote '{name}' on jo verkkokaupassa")
 
-@app.route('/admin/orders', methods=["GET", "POST"])
+@app.route("/admin/orders", methods=["GET", "POST"])
 def admin_orders():
     if not users.get_role() == "admin":
-        return render_template("login.html", error_message = "Adminiin pääsy vain ylläpitäjän tunnuksilla!")
+        return render_template("login.html",
+                               error_message="Adminiin pääsy vain ylläpitäjän tunnuksilla!")
 
     orders_list = orders.get_orders()
     if request.method == "GET":
-        return render_template("admin/orders.html", order_list = orders_list)
+        return render_template("admin/orders.html", order_list=orders_list)
 
     if request.method == "POST":
         users.check_csrf()
@@ -179,52 +180,57 @@ def admin_orders():
         orders.process_order(order_id)
         return redirect("/admin/orders")
 
-@app.route('/admin/product/<int:id>')
+@app.route("/admin/product/<int:id>")
 def admin_product(id):
     if not users.get_role() == "admin":
-        return render_template("login.html", error_message = "Adminiin pääsy vain ylläpitäjän tunnuksilla!")
+        return render_template("login.html",
+                               error_message="Adminiin pääsy vain ylläpitäjän tunnuksilla!")
     return _admin_product_with_message(id, None)
 
-@app.route('/admin/product/<int:id>/update', methods=["POST"])
+@app.route("/admin/product/<int:id>/update", methods=["POST"])
 def admin_product_update(id):
     users.check_csrf()
     if not users.get_role() == "admin":
-        return render_template("login.html", error_message = "Adminiin pääsy vain ylläpitäjän tunnuksilla!")
+        return render_template("login.html",
+                               error_message="Adminiin pääsy vain ylläpitäjän tunnuksilla!")
 
     product = products.get_product(id)
     if not product:
-        return redirect('/admin')
+        return redirect("/admin")
 
     new_name = request.form["name"]
-    if not new_name: new_name = product.name
+    if not new_name:
+        new_name = product.name
     if len(new_name) > 30:
         return _admin_product_with_message(id, "Nimen tulee olla korkeintaan 30 merkkiä pitkä")
 
     new_description = request.form["description"]
-    if not new_description: new_description = product.description
+    if not new_description:
+        new_description = product.description
     if len(new_description) > 500:
-        return _admin_product_with_message(id, "Kuvauksen tulee olla korkeintaan 500 merkkiä pitkä")
+        return _admin_product_with_message(id, "Kuvauksen tulee olla korkeintaan 500 merkkiä")
 
-    if not request.form["price"]: new_price = product.price
+    if not request.form["price"]:
+        new_price = product.price
     else:
         try:
             new_price = float(request.form["price"])
         except:
             return _admin_product_with_message(id, "Hinnan tulee olla desimaaliluku")
     if new_price < 0 or new_price > 1_000_000:
-        return _admin_product_with_message(id,"Hinnan tulee olla positiivinen ja korkeintaan miljoona euroa")
+        return _admin_product_with_message(id,"""Hinnan tulee olla positiivinen
+                                           ja korkeintaan miljoona euroa""")
 
-    is_active = "active" in request.form  
+    is_active = "active" in request.form
     if products.edit_product(product.id, new_name, new_price, new_description, is_active):
-        return redirect(f'/admin/product/{id}')
-    else:
-        return _admin_product_with_message(id, f"Tuote {new_name} on jo verkkokaupassa")
+        return redirect(f"/admin/product/{id}")
+    return _admin_product_with_message(id, f"Tuote {new_name} on jo verkkokaupassa")
 
 def _admin_product_with_message(id, message):
     product = products.get_product(id)
     if not product:
-        return redirect('/admin')
+        return redirect("/admin")
     avg_grade = reviews.get_average_grade(id)
     review_count = reviews.get_review_count(id)
     return render_template("admin/product.html", product=product, avg_grade=avg_grade,
-                            review_count=review_count, error_message=message)
+                           review_count=review_count, error_message=message)
