@@ -4,6 +4,10 @@
 <h3>{{ product.name }}</h3>
 <p>
     <b>Hinta:</b> {{ product.price }} euroa<br>
+    {% if review_count > 0 %}
+    <b>Arvosana:</b> {{ avg_grade }} / 5 tähteä<br>
+    {% endif %}
+    <b>Arvosteluita:</b> {{ review_count }} kpl<br>
     <b>Kuvaus:</b><br>
     {{ product.description }}
 </p>
@@ -18,7 +22,7 @@
 
 <h3>Arvostele tuote</h3>
 <form action="/add_review" method="POST">
-    Montako tähteä?<br>
+    Montako tähteä? (1-5)<br>
     <input type="number" name="grade" min="1" max="5" required style="width: 3em;"><br>
     Kirjoita arvostelu<br>
     <textarea name="content" rows="3" cols="50" minlength="1" maxlength="500" required></textarea><br>
@@ -29,6 +33,10 @@
 {% endif %}
 
 <h3>Arvostelut</h3>
+{% if review_count == 0 %}
+Ei vielä arvosteluita
+{% endif %}
+
 {% for review in reviews_list %}
 <p>
     <b>Arvosteltu: </b> {{ review.created_at.strftime("%d.%m.%Y klo %H:%M") }}<br>

@@ -62,7 +62,10 @@ def show_product(product_id):
     if not product or not product.active:
         return redirect('/')
     reviews_list = reviews.get_reviews(product_id)
-    return render_template("product.html", product=product, reviews_list=reviews_list)
+    avg_grade = reviews.get_average_grade(product_id)
+    review_count = reviews.get_review_count(product_id)
+    return render_template("product.html", product=product,
+        reviews_list=reviews_list, avg_grade=avg_grade, review_count=review_count)
 
 @app.route('/add_to_cart', methods=["POST"])
 def add_to_cart():
@@ -182,11 +185,13 @@ def admin_product(id):
         return render_template("login.html", error_message = "Adminiin pääsy vain ylläpitäjän tunnuksilla!")
 
     product = products.get_product(id)
+    avg_grade = reviews.get_average_grade(id)
+    review_count = reviews.get_review_count(id)
     if not product:
         return redirect('/admin')
 
     if request.method == "GET":
-        return render_template("admin/product.html", product = product)
+        return render_template("admin/product.html", product=product, avg_grade=avg_grade, review_count=review_count)
 
     if request.method == "POST":
         users.check_csrf()
@@ -200,4 +205,4 @@ def admin_product(id):
         if products.edit_product(product.id, new_name, new_price, new_description, is_active):
             return redirect(f'/admin/product/{id}')
         else:
-            return render_template('admin/product.html', product = product, error_message = "Tarkista syöte!")
+            return render_template('admin/product.html', product=product, avg_grade=avg_grade, review_count=review_count, error_message="Tarkista syöte!")

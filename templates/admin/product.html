@@ -8,6 +8,10 @@
 <b>Luotu:</b> {{ product.created_at.strftime("%d.%m.%Y %H:%M:%S") }}<br>
 <b>Viimeksi muokattu:</b> {{ product.updated_at.strftime("%d.%m.%Y %H:%M:%S") }}<br>
 <b>Valikoimassa:</b> {{ product.active }}<br>
+{% if review_count > 0 %}
+<b>Arvosana:</b> {{ avg_grade }} / 5 tähteä<br>
+{% endif %}
+<b>Arvosteluita:</b> {{ review_count }} kpl<br>
 <b>Kuvaus:</b><br> {{ product.description }}
 
 <h3>Tuotteen päivitys</h3>
