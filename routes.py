@@ -198,25 +198,19 @@ def admin_product_update(id):
     if not product:
         return redirect("/admin")
 
-    new_name = request.form["name"]
-    if not new_name:
-        new_name = product.name
+    new_name = request.form["name"] if request.form["name"] else product.name
     if len(new_name) > 30:
         return _admin_product_with_message(id, "Nimen tulee olla korkeintaan 30 merkkiä pitkä")
 
-    new_description = request.form["description"]
-    if not new_description:
-        new_description = product.description
+    new_description = request.form["description"] if request.form["description"] else product.description
     if len(new_description) > 500:
         return _admin_product_with_message(id, "Kuvauksen tulee olla korkeintaan 500 merkkiä")
 
-    if not request.form["price"]:
-        new_price = product.price
-    else:
-        try:
-            new_price = float(request.form["price"])
-        except:
-            return _admin_product_with_message(id, "Hinnan tulee olla desimaaliluku")
+    new_price = request.form["price"] if request.form["price"] else product.price
+    try:
+        new_price = float(new_price)
+    except:
+        return _admin_product_with_message(id, "Hinnan tulee olla desimaaliluku")
     if new_price < 0 or new_price > 1_000_000:
         return _admin_product_with_message(id,"""Hinnan tulee olla positiivinen
                                            ja korkeintaan miljoona euroa""")
