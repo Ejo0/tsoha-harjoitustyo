@@ -42,4 +42,5 @@ def edit_product(product_id, new_name, new_price, new_description, is_active):
             cart.remove_deactivated_from_carts()
         return True
     except:
+        db.session.close()
         return False

@@ -17,11 +17,11 @@
 <h3>Tuotteen päivitys</h3>
 <p>Tyhjäksi jätettyjä kohtia ei muuteta.</p>
 
-<form action="/admin/product/{{ product.id }}" method="POST">
+<form action="/admin/product/{{ product.id }}/update" method="POST">
     Uusi nimi:<br>
     <input type="text" name="name"><br>
     Uusi hinta:<br>
-    <input type="number" name="price" step="0.01"><br>
+    <input type="number" name="price" step="0.01" min="0.01"><br>
     Uusi kuvaus:<br>
     <textarea name="description" rows="3" cols="50"></textarea><br>
     <label for="active">Näytä tuote valikoimassa</label>

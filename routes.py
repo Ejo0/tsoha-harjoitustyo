@@ -179,30 +179,52 @@ def admin_orders():
         orders.process_order(order_id)
         return redirect("/admin/orders")
 
-@app.route('/admin/product/<int:id>', methods=["GET", "POST"])
+@app.route('/admin/product/<int:id>')
 def admin_product(id):
+    if not users.get_role() == "admin":
+        return render_template("login.html", error_message = "Adminiin pääsy vain ylläpitäjän tunnuksilla!")
+    return _admin_product_with_message(id, None)
+
+@app.route('/admin/product/<int:id>/update', methods=["POST"])
+def admin_product_update(id):
+    users.check_csrf()
     if not users.get_role() == "admin":
         return render_template("login.html", error_message = "Adminiin pääsy vain ylläpitäjän tunnuksilla!")
 
     product = products.get_product(id)
-    avg_grade = reviews.get_average_grade(id)
-    review_count = reviews.get_review_count(id)
     if not product:
         return redirect('/admin')
 
-    if request.method == "GET":
-        return render_template("admin/product.html", product=product, avg_grade=avg_grade, review_count=review_count)
+    new_name = request.form["name"]
+    if not new_name: new_name = product.name
+    if len(new_name) > 30:
+        return _admin_product_with_message(id, "Nimen tulee olla korkeintaan 30 merkkiä pitkä")
 
-    if request.method == "POST":
-        users.check_csrf()
-        new_name = request.form["name"]
-        new_price = request.form["price"]
-        new_description = request.form["description"]
-        is_active = "active" in request.form
-        if not new_name: new_name = product.name
-        if not new_price: new_price = product.price
-        if not new_description: new_description = product.description
-        if products.edit_product(product.id, new_name, new_price, new_description, is_active):
-            return redirect(f'/admin/product/{id}')
-        else:
-            return render_template('admin/product.html', product=product, avg_grade=avg_grade, review_count=review_count, error_message="Tarkista syöte!")
+    new_description = request.form["description"]
+    if not new_description: new_description = product.description
+    if len(new_description) > 500:
+        return _admin_product_with_message(id, "Kuvauksen tulee olla korkeintaan 500 merkkiä pitkä")
+
+    if not request.form["price"]: new_price = product.price
+    else:
+        try:
+            new_price = float(request.form["price"])
+        except:
+            return _admin_product_with_message(id, "Hinnan tulee olla desimaaliluku")
+    if new_price < 0 or new_price > 1_000_000:
+        return _admin_product_with_message(id,"Hinnan tulee olla positiivinen ja korkeintaan miljoona euroa")
+
+    is_active = "active" in request.form  
+    if products.edit_product(product.id, new_name, new_price, new_description, is_active):
+        return redirect(f'/admin/product/{id}')
+    else:
+        return _admin_product_with_message(id, f"Tuote {new_name} on jo verkkokaupassa")
+
+def _admin_product_with_message(id, message):
+    product = products.get_product(id)
+    if not product:
+        return redirect('/admin')
+    avg_grade = reviews.get_average_grade(id)
+    review_count = reviews.get_review_count(id)
+    return render_template("admin/product.html", product=product, avg_grade=avg_grade,
+                            review_count=review_count, error_message=message)
