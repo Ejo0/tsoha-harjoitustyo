@@ -2,11 +2,17 @@
 {% block content %}
 
 <h3>Tilauksen yhteenveto</h3>
-<p>Summa yhteensä: {{ session.cart_sum }}</p>
-{% for item in items %}
-<b>{{ item.name }}</b> hinta: {{ item.price }}
-määrä: {{ item.quantity }} summa: {{ item.sum }}<br>
-{% endfor %}
+<p>Summa yhteensä: {{ session.cart_sum }} euroa</p>
+<table>
+    {% for item in items %}
+    <tr>
+        <td><b>{{ item.name }}</b></td>
+        <td>| {{ item.price }}€/kpl,</td>
+        <td>määrä: {{ item.quantity }}kpl,</td>
+        <td>summa: {{ item.sum }}€</td>
+    </tr>
+    {% endfor %}
+</table>
 
 <h3>Vahvista tilaus klikkaamalla maksutapaa</h3>
 <form action="" method="POST" style="font-size:larger;">

@@ -20,11 +20,14 @@
 
 <h3>Tuotteet</h3>
 
-<p>
-    {% for product in products%}
-    <a href="/admin/product/{{ product.id }}">{{ product.name }}</a>
-    {{ product.price }} euroa, valikoimassa: {{ product.active }}<br>
+<table>
+    {% for product in products %}
+    <tr>
+        <td><a href="/admin/product/{{ product.id }}">{{ product.name }}</a></td>
+        <td>{{ product.price }}€</td>
+        <td>valikoimassa: {{ product.active }}</td>
+    </tr>
     {% endfor %}
-</p>
+</table>
 
 {% endblock %}

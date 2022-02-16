@@ -2,21 +2,36 @@
 {% block content %}
 
 <h3>Avoimet tilaukset</h3>
-{% for order in order_list %}
-{% if order.order_state == 'created' %}
-<form action="/admin/orders" method="POST">
-    {{ order.created_at.strftime("%d.%m.%Y %H:%M:%S") }} summa yhteensä: {{ order.total_sum }} tila: käsittelyssä
-    <input type="hidden" name="order_id" value="{{ order.id }}">
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-    <input type="submit" value="Käsittele">
-</form>
-{% endif %}
-{% endfor %}
+<table>
+    {% for order in order_list %}
+    {% if order.order_state == 'created' %}
+    <tr>
+        <td>{{ order.created_at.strftime("%d.%m.%Y %H:%M:%S") }}</td>
+        <td>summa yhteensä {{ order.total_sum }}€</td>
+        <td>
+            <form action="/admin/orders" method="POST">
+                tila: käsittelyssä
+                <input type="hidden" name="order_id" value="{{ order.id }}">
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                <input type="submit" value="Käsittele">
+            </form>
+        </td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+</table>
+
 <h3>Toimitetut tilaukset</h3>
-{% for order in order_list %}
-{% if order.order_state == 'processed' %}
-{{ order.created_at.strftime("%d.%m.%Y %H:%M:%S") }} summa yhteensä: {{ order.total_sum }} tila: toimitettu, käsittelijä: {{ order.handler_id }}<br>
-{% endif %}
-{% endfor %}
+<table>
+    {% for order in order_list %}
+    {% if order.order_state == 'processed' %}
+    <tr>
+        <td>{{ order.created_at.strftime("%d.%m.%Y %H:%M:%S") }}</td>
+        <td>summa yhteensä {{ order.total_sum }}€</td>
+        <td>tila: toimitettu, käsittelijä: {{ order.handler_id }}</td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+</table>
 
 {% endblock %}

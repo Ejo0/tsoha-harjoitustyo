@@ -2,28 +2,42 @@
 {% block content %}
 
 <h3>Tilaukset:</h3>
-{% for order in order_list %}
-{{ order.created_at.strftime("%d.%m.%Y klo %H:%M") }}, summa: {{ order.total_sum }} euroa, tila:
-{% if order.order_state == 'created' %}
-Odottaa toimitusta
-{% elif order.order_state == 'processed' %}
-Toimitettu
-{% endif %}
-<br>
-{% endfor %}
+
+<table>
+    {% for order in order_list %}
+    <tr>
+        <td>{{ order.created_at.strftime("%d.%m.%Y klo %H:%M") }},</td>
+        <td>summa: {{ order.total_sum }}€</td>
+        {% if order.order_state == 'created' %}
+        <td>| Odottaa toimitusta</td>
+        {% elif order.order_state == 'processed' %}
+        <td>| Toimitettu</td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
 
 <h3>Ostoskori:</h3>
 {% if items %}
 <p><a href="{{ session.user_id }}/checkout">Vahvista tilaus</a></p>
 {% endif %}
-{% for item in items %}
 
-<form action="/delete_cart_item" method="POST">
-    <b><a href="/product/{{ item.product_id }}">{{ item.name }}</a></b> hinta: {{ item.price }}
-    määrä: {{ item.quantity }} summa: {{ item.sum }}
-    <input type="hidden" name="cart_item_id" value="{{ item.id }}">
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-    <input type="submit" value="Poista tuote korista" style="color: red">
-</form>
-{% endfor %}
+<table>
+    {% for item in items %}
+    <tr>
+        <td><b><a href="/product/{{ item.product_id }}">{{ item.name }}</a></b></td>
+        <td>| {{ item.price }}€/kpl,</td>
+        <td>määrä: {{ item.quantity }}kpl,</td>
+        <td>summa: {{ item.sum }}€</td>
+        <td>
+            <form action="/delete_cart_item" method="POST">
+                <input type="hidden" name="cart_item_id" value="{{ item.id }}">
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                <input id="delete_button" type="submit" value="Poista">
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
 {% endblock %}

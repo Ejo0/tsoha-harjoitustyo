@@ -5,7 +5,7 @@
 
 <p>
     {% for product in products %}
-    <a href="/product/{{ product.id }}"> {{ product.name }}</a> hinta: {{ product.price }}<br>
+    <a href="/product/{{ product.id }}"> {{ product.name }}</a> {{ product.price }}€<br>
     {% endfor %}
 </p>
 
