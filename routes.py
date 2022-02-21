@@ -31,7 +31,7 @@ def register():
                 return redirect("/")
             if role == "admin":
                 return redirect("/admin")
-            return render_template("register.html", error_message="Tunnuksella löytyy jo käyttäjä")
+        return render_template("register.html", error_message="Tunnuksella löytyy jo käyttäjä")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
