@@ -1,5 +1,6 @@
 Kurssin _Tietokantasovellus_ harjoitustyö  
-Päivitetty 5.2.2022
+Päivitetty 16.2.2022
+
 
 ## Verkkokauppasovellus
 
@@ -9,19 +10,14 @@ Sovelluksen tuotannossa olevaa versiota pääset testaamaan täältä https://ve
 
 Sovelluksessa voi luoda käyttäjäprofiilin, josta voi tehdä halutessaan ylläpitäjän, jolloin kirjautuminen ohjataan palvelun admin-osioon https://verkkokauppasovellus.herokuapp.com/admin
 
-### Dokumentaatio
-
-Tietokantaa kuvattu päällisin puolin [arkkitehtuurikuvauksessa](/documentation/architecture.md).
-
-### Välipalautus 2
-
-Sovelluksen perustoiminnallisuudet on pitkälti tuotannossa. Alla listattuna sovelluksen ominaisuuksia:
+### Ominaisuudet
 
 Sovellus:
 - Verkkokaupalla on julkinen etusivu, josta löytyy listaus myytävistä tuotteista. Lisäksi linkki sisäänkirjautumista tai käyttäjätunnuksen luomista varten.
 - Myytäviä tuotteita klikkaamalla avautuu erillinen näkymä, josta löytyy tuotteen tarkemmat tiedot
 - Kirjautunut käyttäjä:
     - Voi lisätä tuotteita ostoskoriin tuotenäkymästä
+    - Voi lisätä tuotteelle arvostelun
     - Voi poistaa tuotteita ostoskorista
     - Ostoskorin kautta pääsee tilauksen vahvistukseen
     - Ostoskori-näkymässä näkee tehdyt tilaukset
@@ -35,16 +31,10 @@ Admin:
 - Ylläpitäjä voi merkitä tehtyjä tilauksia toimitetuksi
 - Kaikissa näkymissä uloskirjautuminen
 
-#### Jatkokehitys
+### Välipalautus 3
 
-Palautteesta riippuen seuraavia asioita on vielä tarkoitus työstää:
-- Koodin huolto (pylint)
-- Laadunvarmistusta (esim. syötteiden validaatiot)
-- UI:n viimeistelyä (CSS)
-- Muita palautteessa annettuja huomioita
-- Dokumentaatio
+Sovelluksen pitäisi olla kutakuinkin valmis, eli tarkoituksena on enää viilata palautteessa esille tulevia seikkoja.
 
-Mahdolliset lisäfeaturet:
-- Käyttäjät voivat antaa arvosteluja tuotteille (uusi tietokantataulu)
-- Alennuskampanjat (+ tuotekategoriat)
-- Tehtyjen tilausten sisällön selausta
+### Dokumentaatio
+
+Tietokantaa kuvattu päällisin puolin [arkkitehtuurikuvauksessa](/documentation/architecture.md).
