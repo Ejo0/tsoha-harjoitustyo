@@ -1,5 +1,5 @@
 Kurssin _Tietokantasovellus_ harjoitustyö  
-Päivitetty 16.2.2022
+Päivitetty 5.3.2022
 
 
 ## Verkkokauppasovellus
@@ -30,10 +30,6 @@ Admin:
 - Tuotteita voi poistaa tai palauttaa takaisin valikoimaan (ns. soft delete)
 - Ylläpitäjä voi merkitä tehtyjä tilauksia toimitetuksi
 - Kaikissa näkymissä uloskirjautuminen
-
-### Välipalautus 3
-
-Sovelluksen pitäisi olla kutakuinkin valmis, eli tarkoituksena on enää viilata palautteessa esille tulevia seikkoja.
 
 ### Dokumentaatio
 
