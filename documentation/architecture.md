@@ -1,7 +1,5 @@
 ### Tietokanta
 
-#### 2. välipalautus
-
 Versiossa on käytössä 5 tietokantataulua:
 - `users` -> käyttäjien tiedot (asiakkaat ja ylläpitäjät)
 - `products` -> myytävät tuotteet
@@ -19,7 +17,7 @@ cart_item -rivi poistetaan kokonaan taulusta.
 `order_items` sisältää ns. staattista tietoa, eli kappalemäärän ja yksikköhinnan kyseisestä tuotteesta ostohetkellä, sekä viitteen tuotteeseen.
 Näin tehtyjen tilausten tiedot eivät muutu, jos tuotetta myöhemmin päivitetään (esim. hinnan muutos).
 
-Normaalit käyttäjät voivat myös tehdä arvosteluja tuotteisiin.
+Normaalit käyttäjät voivat myös tehdä arvosteluja tuotteisiin. Jokaisella arvostelulla on yksi käyttäjä (arvostelija) ja yksi tuote (arvostelun kohde)
 
 Relaatioita kuvattu alla:
 
